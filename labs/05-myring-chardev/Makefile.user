@@ -1,0 +1,12 @@
+CC      := gcc
+CFLAGS  := -std=c11 -Wall -Wextra -O2 -g
+
+all: testtool
+
+testtool: testtool.c
+	$(CC) $(CFLAGS) testtool.c -o testtool
+
+clean:
+	rm -f testtool
+
+.PHONY: all clean

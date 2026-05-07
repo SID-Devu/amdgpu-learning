@@ -1,0 +1,44 @@
+# Build artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.cmd
+*.symvers
+*.order
+.tmp_versions/
+.*.cmd
+.*.swp
+modules.builtin
+modules.builtin.modinfo
+
+# Userspace binaries from labs
+labs/01-arena/test
+labs/02-spsc/test
+labs/03-thread-pool/test
+labs/05-myring-chardev/testtool
+labs/08-libdrm-amdgpu/info
+**/a.out
+**/*.bin
+**/*.exe
+
+# Editor / OS
+.vscode/
+.idea/
+*~
+.DS_Store
+Thumbs.db
+
+# Python (used in Part 0 examples)
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Logs / temp
+*.log
+*.tmp
+core
+core.*

@@ -22,9 +22,22 @@ You have two reasons. Either alone is enough. Both together: **non-negotiable.**
 
 So this part has **the highest leverage** of any part in the book. You will use what you learn here for the next 30 years.
 
+## ⚠️ Read this first — [DSA-00 — How to read this part (without running code)](DSA-00-how-to-read.md)
+
+Many chapters have been **rewritten so you can learn purely by reading** — with diagrams, step-by-step traces, and worked examples. **You don't need to run any code** for chapters 1–7, 10, 14, and 15. Read them. Trace them with paper.
+
+The remaining chapters (8, 9, 11–13, 16–28) are still in the original style — they assume you'll run code or solve problems. Get the foundations from the rewritten chapters first; the rest will be much easier.
+
 ## How to study this part
 
-For every topic:
+**For the rewritten chapters (1–7, 10, 14, 15):**
+
+1. Read once skimming.
+2. Read again, slowly tracing each example with a notebook.
+3. Without looking, redraw the data structure on a blank page.
+4. Re-read to find what you missed.
+
+**For the original-style chapters (8, 9, 11–13, 16–28):**
 
 1. **Implement it from scratch in C.** No `qsort`, no library, no copying.
 2. **Test it with at least 5 cases**, including empty, one, and corner.
@@ -36,36 +49,40 @@ If you do this for every chapter, you'll be ahead of >90% of new grads.
 
 ## Table of contents
 
-| # | Chapter | Why it matters |
-|---|---|---|
-| 1 | [Big-O & complexity analysis](DSA-01-bigO.md) | The language all engineers speak |
-| 2 | [Arrays — the foundation](DSA-02-arrays.md) | RAM is an array; everything starts here |
-| 3 | [Strings (in C, properly)](DSA-03-strings.md) | C strings are tricky; master them |
-| 4 | [Linked lists (single, double, circular)](DSA-04-linked-lists.md) | The kernel's `list_head` is everywhere |
-| 5 | [Stacks & queues (incl. ring buffers)](DSA-05-stacks-queues.md) | Function calls, IH ring, kfifo |
-| 6 | [Hash tables (chaining, open addressing)](DSA-06-hash-tables.md) | The most-used data structure in CS |
-| 7 | [Binary trees & BSTs](DSA-07-trees.md) | Foundation for self-balancing trees |
-| 8 | [Self-balancing trees: AVL, Red-Black](DSA-08-balanced-trees.md) | Linux `rbtree` is in this chapter |
-| 9 | [B-trees and B+trees](DSA-09-btrees.md) | Filesystems and DBs use these |
-| 10 | [Heaps & priority queues](DSA-10-heaps.md) | Schedulers, Dijkstra, top-K |
-| 11 | [Graphs — representation & traversal (BFS/DFS)](DSA-11-graphs.md) | Dependency graphs, DRM scheduler deps |
-| 12 | [Shortest paths: Dijkstra, Bellman-Ford, A*](DSA-12-shortest-paths.md) | Path planning, graph weights |
-| 13 | [Tries](DSA-13-tries.md) | Strings, autocomplete, IP routing |
-| 14 | [Sorting algorithms (all of them)](DSA-14-sorting.md) | When each is right; kernel's sort.c |
-| 15 | [Searching: linear, binary, ternary, exponential](DSA-15-searching.md) | The most-asked interview pattern |
-| 16 | [Recursion deep](DSA-16-recursion.md) | The mental model behind DP, trees, backtracking |
-| 17 | [Dynamic programming](DSA-17-dp.md) | The interviewer's favorite |
-| 18 | [Greedy algorithms](DSA-18-greedy.md) | When greedy works and when it doesn't |
-| 19 | [Divide & conquer](DSA-19-divide-conquer.md) | The mindset behind merge sort, quicksort |
-| 20 | [Bit manipulation tricks](DSA-20-bits.md) | Kernel uses tons of these |
-| 21 | [Two pointers, sliding window, fast/slow](DSA-21-two-pointers.md) | Problem-solving patterns |
-| 22 | [Backtracking](DSA-22-backtracking.md) | N-queens, sudoku, permutations |
-| 23 | [Union-Find / DSU](DSA-23-union-find.md) | Kruskal, connectivity, image labeling |
-| 24 | [Advanced trees: segment, Fenwick (BIT), interval](DSA-24-advanced-trees.md) | Linux `interval_tree` lives here |
-| 25 | [String algorithms: KMP, Rabin-Karp, Z, suffix array](DSA-25-string-algos.md) | Pattern matching, dedup, search |
-| 26 | [System-design DSA: LRU cache, bloom filter, skip list, consistent hashing](DSA-26-system-design-ds.md) | Every senior interview asks one |
-| 27 | [Concurrency-aware DS: lock-free queue, RCU, hazard pointers](DSA-27-concurrent-ds.md) | The bridge to kernel concurrency |
-| 28 | [DSA in the Linux kernel — guided tour](DSA-28-kernel-ds-tour.md) | Where in the source tree everything lives |
+✅ = rewritten in read-to-learn style with diagrams + traces (no code-run required)
+○ = original style (run-and-solve)
+
+| # | Chapter | Style | Why it matters |
+|---|---|---|---|
+| 0 | [How to read this part (without running code)](DSA-00-how-to-read.md) | ✅ | Set expectations |
+| 1 | [Big-O & complexity analysis](DSA-01-bigO.md) | ✅ | The language all engineers speak |
+| 2 | [Arrays — the foundation](DSA-02-arrays.md) | ✅ | RAM is an array; everything starts here |
+| 3 | [Strings (in C, properly)](DSA-03-strings.md) | ✅ | C strings are tricky; master them |
+| 4 | [Linked lists (single, double, circular)](DSA-04-linked-lists.md) | ✅ | The kernel's `list_head` is everywhere |
+| 5 | [Stacks & queues (incl. ring buffers)](DSA-05-stacks-queues.md) | ✅ | Function calls, IH ring, kfifo |
+| 6 | [Hash tables (chaining, open addressing)](DSA-06-hash-tables.md) | ✅ | The most-used data structure in CS |
+| 7 | [Binary trees & BSTs](DSA-07-trees.md) | ✅ | Foundation for self-balancing trees |
+| 8 | [Self-balancing trees: AVL, Red-Black](DSA-08-balanced-trees.md) | ○ | Linux `rbtree` is in this chapter |
+| 9 | [B-trees and B+trees](DSA-09-btrees.md) | ○ | Filesystems and DBs use these |
+| 10 | [Heaps & priority queues](DSA-10-heaps.md) | ✅ | Schedulers, Dijkstra, top-K |
+| 11 | [Graphs — representation & traversal (BFS/DFS)](DSA-11-graphs.md) | ○ | Dependency graphs, DRM scheduler deps |
+| 12 | [Shortest paths: Dijkstra, Bellman-Ford, A*](DSA-12-shortest-paths.md) | ○ | Path planning, graph weights |
+| 13 | [Tries](DSA-13-tries.md) | ○ | Strings, autocomplete, IP routing |
+| 14 | [Sorting algorithms (all of them)](DSA-14-sorting.md) | ✅ | When each is right; kernel's sort.c |
+| 15 | [Searching: linear, binary, ternary, exponential](DSA-15-searching.md) | ✅ | The most-asked interview pattern |
+| 16 | [Recursion deep](DSA-16-recursion.md) | ○ | The mental model behind DP, trees, backtracking |
+| 17 | [Dynamic programming](DSA-17-dp.md) | ○ | The interviewer's favorite |
+| 18 | [Greedy algorithms](DSA-18-greedy.md) | ○ | When greedy works and when it doesn't |
+| 19 | [Divide & conquer](DSA-19-divide-conquer.md) | ○ | The mindset behind merge sort, quicksort |
+| 20 | [Bit manipulation tricks](DSA-20-bits.md) | ○ | Kernel uses tons of these |
+| 21 | [Two pointers, sliding window, fast/slow](DSA-21-two-pointers.md) | ○ | Problem-solving patterns |
+| 22 | [Backtracking](DSA-22-backtracking.md) | ○ | N-queens, sudoku, permutations |
+| 23 | [Union-Find / DSU](DSA-23-union-find.md) | ○ | Kruskal, connectivity, image labeling |
+| 24 | [Advanced trees: segment, Fenwick (BIT), interval](DSA-24-advanced-trees.md) | ○ | Linux `interval_tree` lives here |
+| 25 | [String algorithms: KMP, Rabin-Karp, Z, suffix array](DSA-25-string-algos.md) | ○ | Pattern matching, dedup, search |
+| 26 | [System-design DSA: LRU cache, bloom filter, skip list, consistent hashing](DSA-26-system-design-ds.md) | ○ | Every senior interview asks one |
+| 27 | [Concurrency-aware DS: lock-free queue, RCU, hazard pointers](DSA-27-concurrent-ds.md) | ○ | The bridge to kernel concurrency |
+| 28 | [DSA in the Linux kernel — guided tour](DSA-28-kernel-ds-tour.md) | ○ | Where in the source tree everything lives |
 
 **Total: 28 chapters.** At 2 chapters/week, that's 14 weeks. At 3 chapters/week (the recommended pace if you have 1 hr/day), it's about 9–10 weeks.
 
@@ -85,4 +102,4 @@ We use **C**, not Python or C++. Why?
 
 The first time you implement a hash table in C, with hand-rolled hashing, collision chains, and resize logic, **you become a different engineer**. Don't outsource that.
 
-Now → [Big-O & complexity analysis](DSA-01-bigO.md).
+Now → [DSA-00 — How to read this part (without running code)](DSA-00-how-to-read.md), then [DSA-01 — Big-O](DSA-01-bigO.md).

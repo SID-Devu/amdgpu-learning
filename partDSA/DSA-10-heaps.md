@@ -1,158 +1,474 @@
-# DSA 10 — Heaps and priority queues
+# DSA 10 — Heaps & priority queues (read-to-learn version)
 
-> A heap gives you the next-most-important thing in O(log n). Schedulers, Dijkstra, top-K — all priority queues.
+> A heap is a tree pretending to be an array — and it gives you the **min** (or **max**) of millions of items in **constant time**.
 
-## Heap properties
+## The big idea
 
-A **binary heap** is a complete binary tree where, in a **min-heap**, every parent is **≤ its children** (max-heap: ≥). Stored implicitly as an array — no pointers.
+A **priority queue** is a data structure that always lets you grab the **highest priority** item. Used everywhere:
 
-For a node at index `i`:
-- left child = `2i + 1`
-- right child = `2i + 2`
-- parent = `(i − 1) / 2`
+- OS scheduler picks the highest-priority runnable task.
+- Dijkstra's algorithm picks the closest unvisited node.
+- Top-K problems: "find the 100 largest sales today."
+- Linux's deadline scheduler (`include/linux/rbtree.h` in scheduling code).
+
+A **heap** is the simplest, fastest way to implement a priority queue.
+
+## The heap shape and rules
+
+A **min-heap**:
+1. Is a **complete** binary tree (every level full except possibly the last; last level filled left-to-right).
+2. **Heap property**: every node's value is ≤ its children's values.
+
+The smallest value is always at the **root**. Given any node, both its children are ≥ it.
+
+Picture (values 1, 3, 6, 5, 9, 8, 7):
 
 ```
-index:  0   1   2   3   4   5   6
-value:  3   5   8   9   7   12  10
+              1                    ← root (smallest)
+            /   \
+           3     6
+          / \   / \
+         5   9 8   7
 ```
 
-Tree:
+Verify the property:
+- 1 ≤ 3 ✓, 1 ≤ 6 ✓
+- 3 ≤ 5 ✓, 3 ≤ 9 ✓
+- 6 ≤ 8 ✓, 6 ≤ 7 ✓
+
+A **max-heap** is the same idea, flipped: every node ≥ its children. Largest at root.
+
+## The trick: store a tree as an array (no pointers!)
+
+Because the tree is **complete**, we can pack it into an array level by level.
+
 ```
-             3
-           /   \
-          5     8
-         / \   / \
-        9   7 12 10
+   tree:                              array:
+
+              1                       index:  0  1  2  3  4  5  6
+            /   \                     value: [1, 3, 6, 5, 9, 8, 7]
+           3     6
+          / \   / \
+         5   9 8   7
 ```
 
-Invariant: every parent ≤ both children. (Note: heaps are **not** sorted; they only enforce parent-child ordering.)
+The mapping:
+- `arr[0]` = root.
+- For node at index `i`:
+  - **left child** is at `2*i + 1`
+  - **right child** is at `2*i + 2`
+  - **parent** is at `(i - 1) / 2`
 
-## Operations
+### Verify on the example
 
-### Insert (sift up)
+| index | value | left child idx | left value | right child idx | right value | parent idx | parent value |
+|---|---|---|---|---|---|---|---|
+| 0 | 1 | 1 | 3 | 2 | 6 | — | — |
+| 1 | 3 | 3 | 5 | 4 | 9 | 0 | 1 |
+| 2 | 6 | 5 | 8 | 6 | 7 | 0 | 1 |
+| 3 | 5 | (none) | | (none) | | 1 | 3 |
+| 4 | 9 | (none) | | (none) | | 1 | 3 |
+| 5 | 8 | (none) | | (none) | | 2 | 6 |
+| 6 | 7 | (none) | | (none) | | 2 | 6 |
+
+Every parent ≤ its children. The heap property holds.
+
+**Why arrays?** No pointer overhead, contiguous memory (cache-friendly), no malloc per node. Tons of efficiency over a tree-with-pointers.
+
+## Insert into a min-heap (sift up)
+
+To add a new element:
+1. Append at the end of the array.
+2. **Sift up**: while the new element is smaller than its parent, swap them.
+
+### Trace: insert 2 into our heap
+
+Start:
+
+```
+              1
+            /   \
+           3     6
+          / \   / \
+         5   9 8   7
+
+  arr = [1, 3, 6, 5, 9, 8, 7]
+```
+
+**Step 1: append**
+
+```
+  arr = [1, 3, 6, 5, 9, 8, 7, 2]
+                              ↑
+                              new at index 7
+```
+
+```
+              1
+            /   \
+           3     6
+          / \   / \
+         5   9 8   7
+        /
+       2     ← inserted at next free slot
+```
+
+The heap property is broken — 2's parent is 5, but 2 < 5.
+
+**Step 2: sift up**
+
+Index 7's parent: `(7-1)/2 = 3`, value 5. 2 < 5 → **swap.**
+
+```
+  arr = [1, 3, 6, 2, 9, 8, 7, 5]
+                  ↑
+                  2 is now at index 3
+```
+
+```
+              1
+            /   \
+           3     6
+          / \   / \
+         2   9 8   7
+        /
+       5
+```
+
+Still broken — 2's parent is 3 (index `(3-1)/2 = 1`). 2 < 3 → **swap.**
+
+```
+  arr = [1, 2, 6, 3, 9, 8, 7, 5]
+            ↑
+            2 is now at index 1
+```
+
+```
+              1
+            /   \
+           2     6
+          / \   / \
+         3   9 8   7
+        /
+       5
+```
+
+2's parent is 1 (index 0). 2 > 1 → **stop.** Heap property restored.
+
+| Step | swap? | between | after |
+|---|---|---|---|
+| 0 | append | — | `[1, 3, 6, 5, 9, 8, 7, 2]` |
+| 1 | yes | indices 7 ↔ 3 | `[1, 3, 6, 2, 9, 8, 7, 5]` |
+| 2 | yes | indices 3 ↔ 1 | `[1, 2, 6, 3, 9, 8, 7, 5]` |
+| 3 | no (2 > 1) | — | done |
+
+**Two swaps. O(log n) — at most height of the tree.**
+
+## Remove the min (extract-min, sift down)
+
+To remove the root:
+1. Save root's value (this is the answer).
+2. Move the **last element** of the array into the root.
+3. Decrement size.
+4. **Sift down**: swap with the smaller child while needed.
+
+### Trace: extract-min from `[1, 2, 6, 3, 9, 8, 7, 5]`
+
+Start:
+
+```
+              1
+            /   \
+           2     6
+          / \   / \
+         3   9 8   7
+        /
+       5
+```
+
+**Step 1: save 1.** That's the answer.
+
+**Step 2: move last (index 7, value 5) to root.**
+
+```
+  arr = [5, 2, 6, 3, 9, 8, 7]      (size 7 now)
+```
+
+```
+              5
+            /   \
+           2     6
+          / \   / \
+         3   9 8   7
+```
+
+Heap property broken — 5 > 2 (its left child).
+
+**Step 3: sift down.** Compare 5 with its children (2, 6); pick the smaller (2). 5 > 2 → swap.
+
+```
+  arr = [2, 5, 6, 3, 9, 8, 7]
+```
+
+```
+              2
+            /   \
+           5     6
+          / \   / \
+         3   9 8   7
+```
+
+Now 5 is at index 1. Children: 3 (index 3), 9 (index 4). Smaller is 3. 5 > 3 → swap.
+
+```
+  arr = [2, 3, 6, 5, 9, 8, 7]
+```
+
+```
+              2
+            /   \
+           3     6
+          / \   / \
+         5   9 8   7
+```
+
+5 is at index 3. Children: indices 7, 8 — but the array only has 7 elements (indices 0–6). 5 has **no children** → stop.
+
+| Step | action | array | tree |
+|---|---|---|---|
+| 0 | save root | `[1,2,6,3,9,8,7,5]` | (above) |
+| 1 | last → root | `[5,2,6,3,9,8,7]` | top has 5 |
+| 2 | swap with smaller child (2) | `[2,5,6,3,9,8,7]` | 5 down |
+| 3 | swap with smaller child (3) | `[2,3,6,5,9,8,7]` | 5 down again |
+| 4 | no children — stop |   |   |
+
+**Returned: 1.** **Two sift-down swaps.** **O(log n).**
+
+The tree's height is at most ~log₂(n). Sifting up or down can move at most that many levels. Both insert and extract-min are **O(log n).**
+
+## The full code (min-heap, array-backed)
+
 ```c
-void heap_push(int *h, int *n, int x) {
-    int i = (*n)++;
-    h[i] = x;
-    while (i > 0 && h[(i-1)/2] > h[i]) {
-        int t = h[i]; h[i] = h[(i-1)/2]; h[(i-1)/2] = t;
-        i = (i-1)/2;
+typedef struct {
+    int *a;
+    size_t size, cap;
+} heap_t;
+
+static void heap_swap(heap_t *h, size_t i, size_t j) {
+    int t = h->a[i]; h->a[i] = h->a[j]; h->a[j] = t;
+}
+
+void heap_push(heap_t *h, int v) {
+    if (h->size == h->cap) {
+        h->cap = h->cap ? h->cap * 2 : 16;
+        h->a = realloc(h->a, h->cap * sizeof(int));
+    }
+    size_t i = h->size++;
+    h->a[i] = v;
+    while (i > 0) {
+        size_t parent = (i - 1) / 2;
+        if (h->a[parent] <= h->a[i]) break;     // heap restored
+        heap_swap(h, parent, i);
+        i = parent;
     }
 }
-```
-O(log n).
 
-### Pop min (sift down)
-```c
-int heap_pop(int *h, int *n) {
-    int min = h[0];
-    h[0] = h[--(*n)];
-    int i = 0;
-    while (1) {
-        int l = 2*i+1, r = 2*i+2, smallest = i;
-        if (l < *n && h[l] < h[smallest]) smallest = l;
-        if (r < *n && h[r] < h[smallest]) smallest = r;
-        if (smallest == i) break;
-        int t = h[i]; h[i] = h[smallest]; h[smallest] = t;
+int heap_pop(heap_t *h) {
+    int top = h->a[0];
+    h->size--;
+    h->a[0] = h->a[h->size];
+    size_t i = 0;
+    for (;;) {
+        size_t l = 2*i + 1, r = 2*i + 2, smallest = i;
+        if (l < h->size && h->a[l] < h->a[smallest]) smallest = l;
+        if (r < h->size && h->a[r] < h->a[smallest]) smallest = r;
+        if (smallest == i) break;                // heap restored
+        heap_swap(h, i, smallest);
         i = smallest;
     }
-    return min;
+    return top;
 }
 ```
-O(log n).
 
-### Peek
-`h[0]` — O(1).
+Read this carefully against the traces above. Each line maps directly to a step in the trace.
 
-### Heapify (build from array)
-Naive: insert each → O(n log n).
-Better: start at last non-leaf, sift down each → **O(n)**. Surprisingly tight bound; comes from the fact most nodes are near leaves.
+## Heap operations summary
+
+| Operation | Time |
+|---|---|
+| Find min (peek root) | **O(1)** |
+| Insert | **O(log n)** |
+| Extract-min | **O(log n)** |
+| Build heap from n elements | **O(n)** (clever, see below) |
+| Heap sort (sort using heap) | **O(n log n)** |
+
+## Build heap in O(n) — Floyd's bottom-up
+
+If you have `n` items in a random array and want to make it a heap, you could call `heap_push` n times — that's O(n log n). But there's a faster way.
+
+**Idea:** start from the **bottom** of the tree. Leaves are already valid heaps (size 1). Sift down each non-leaf node.
 
 ```c
-void heapify(int *h, int n) {
-    for (int i = n/2 - 1; i >= 0; i--) {
-        // sift down at i
+void build_heap(int *a, size_t n) {
+    if (n < 2) return;
+    for (size_t i = n / 2 - 1; ; i--) {       // last non-leaf to root
+        sift_down(a, n, i);
+        if (i == 0) break;
     }
 }
 ```
 
-## Real applications
+The mathematical reason this is O(n) (not O(n log n)): nodes at depth d are O(n / 2^d), and each sift-down moves O(log n - d) levels. The sum across all depths telescopes to O(n).
 
-### Top-K
-"Find the K largest elements" — use a min-heap of size K. For each new element, if it's bigger than the heap's min, pop and push. End up with K largest. O(n log k).
+You don't need to memorize the proof. Just remember: **build_heap is O(n).** Heap sort then extract-min n times = O(n + n log n) = **O(n log n).**
+
+## Heap sort (sort an array in place)
 
 ```c
-int kth_largest(int *a, int n, int k) {
-    int h[k]; int hn = 0;
-    for (int i = 0; i < n; i++) {
-        if (hn < k) heap_push(h, &hn, a[i]);
-        else if (a[i] > h[0]) { heap_pop(h, &hn); heap_push(h, &hn, a[i]); }
+void heap_sort(int *a, size_t n) {
+    build_heap(a, n);                  // step 1: O(n)
+    for (size_t end = n - 1; end > 0; end--) {
+        // (a) swap root (smallest) to end
+        int t = a[0]; a[0] = a[end]; a[end] = t;
+        // (b) heapify the smaller heap (size = end)
+        sift_down(a, end, 0);
     }
-    return h[0];
 }
 ```
 
-### Dijkstra's shortest path
-Priority queue keyed on distance — see DSA-12.
+Wait — that sorts **descending**? Yes, with a min-heap. Use a **max-heap** for ascending order. (Min/max are symmetric — flip every comparison.)
 
-### Heap sort
-Build a heap (O(n)), repeatedly pop the max into the array tail. O(n log n) **in-place**, no extra memory. Worst case O(n log n) — better worst case than quicksort.
+Heap sort is **O(n log n)** worst case, **O(1)** extra space (in-place). Compare to merge sort (O(n log n) but O(n) extra space). Heap sort is the in-place sort of choice when memory is tight.
 
-### Schedulers
-A scheduler's "next runnable task" is the lowest-priority-number task. Heap is the obvious choice. (Linux's CFS actually uses a red-black tree keyed on virtual runtime — same effect.)
+## Top-K problem (interview classic)
 
-### Median maintenance
-Two heaps: max-heap of lower half, min-heap of upper half. Median = top of bigger heap (or average of both tops). O(log n) per insert.
+"Given a stream of N numbers, find the K largest."
 
-### Event-driven simulation
-"Next event by timestamp." Priority queue of events.
+Naive: sort the whole stream — O(N log N). For huge N this is wasteful — we only need K values.
 
-## Decrease-key (the awkward op)
+**Better:** keep a **min-heap of size K**. For each new value:
+- If heap has fewer than K items, push.
+- Else if new value > heap root, pop and push the new value.
 
-For Dijkstra, you sometimes want to **lower** a key already in the heap. Standard binary heap doesn't have an O(log n) decrease-key without:
-- a hash map from value → index, or
-- a more complex structure (Fibonacci heap, pairing heap).
+End: the heap holds the K largest.
 
-In practice: insert the new lower-priority entry, and skip stale entries when popping. Often fast enough.
+Why min-heap for "K largest"? Because we only need to **evict the smallest of the current K** when a bigger one arrives.
 
-## Variants you should know about
+**Time:** O(N log K). For N=10⁹, K=100, this is ~10¹⁰ ops vs ~3×10¹⁰ for full sort. Big win.
 
-- **Binomial heap** — supports merge in O(log n).
-- **Fibonacci heap** — amortized O(1) decrease-key. Rarely used in practice (huge constants).
-- **Pairing heap** — much simpler than Fibonacci, fast in practice. Used in some real systems.
-- **Leftist heap, skew heap** — mergeable.
+### Trace: K=3, stream = [4, 1, 7, 2, 9, 3]
 
-For interviews, **binary heap is enough**. For real systems, pick one with merge support if you need it.
+Start: empty heap (size ≤ 3).
 
-## In the Linux kernel
+| value | action | heap (sorted view) |
+|---|---|---|
+| 4 | size<3, push | [4] |
+| 1 | size<3, push | [1, 4] |
+| 7 | size<3, push | [1, 4, 7] |
+| 2 | 2 < heap_min (1)? no. **2 > 1 → pop 1, push 2** | [2, 4, 7] |
+| 9 | 9 > 2 → pop 2, push 9 | [4, 7, 9] |
+| 3 | 3 > 4? no → skip | [4, 7, 9] |
 
-- The CFS scheduler uses a **red-black tree** keyed on `vruntime`, **not** a heap. Why? Because "remove arbitrary entry" (when a task is canceled) needs O(log n), and RB-tree gives that uniformly.
-- `kernel/time/timer.c` for software timers uses a **timer wheel** rather than a heap — bucketed, O(1) average insert.
-- DRM scheduler uses priority queues per ring.
-- For "delayed work" via `delayed_workqueue`, internally there are timers.
+End: top-3 largest = **{4, 7, 9}.** ✓
 
-So the lesson: heaps are great, but the kernel often picks alternatives that handle deletion or insertion at constant cost in their domain.
+## Where heaps appear in real systems
+
+- **Linux scheduler (CFS)**: uses a Red-Black tree (similar idea: extract-min is O(log n)) to find the next runnable task.
+- **Linux kernel timers**: a heap (`hrtimer`) ordered by expiration time. Next-to-fire is at the root.
+- **Dijkstra's algorithm** (next chapter): repeatedly extract the closest unvisited node from a heap.
+- **Merge K sorted arrays**: use a heap of K iterators to always pick the smallest next value. (Used in databases, MapReduce, log file merging.)
+- **`std::priority_queue` in C++**, `heapq` in Python — built-in heaps you'll use in production code.
 
 ## Common bugs
 
-1. **Wrong child index formula** (`2i+1` vs `2i`). Test with examples on paper.
-2. **Forgetting to decrement size before sifting** during pop.
-3. **Mixing min and max heap** — pick one and stick with it. To turn a min-heap into a max-heap, negate.
-4. **Heapify in wrong order** — must go bottom-up.
+### Bug 1: forgetting that the array is 0-indexed
 
-## Try it
+If you copied a textbook that uses 1-indexed arrays:
+- left = `2*i`, right = `2*i + 1`, parent = `i / 2`.
 
-1. Implement min-heap with `push`, `pop`, `peek`, `heapify`, `size`.
-2. Heap-sort an array. Verify in-place.
-3. Top-K problem: given a stream of numbers, maintain the K largest. Test with K=10, n=1M.
-4. Median maintenance with two heaps. After each push, print the running median.
-5. Implement a simple event-driven simulator: events have `(timestamp, callback)`, the simulator pops the earliest and "fires" it. Add a few events that schedule new events and verify ordering.
-6. Read `kernel/sched/fair.c` — find where the runqueue is searched for the next task. (Hint: `pick_next_task_fair`.)
+C is **0-indexed**, so:
+- left = `2*i + 1`, right = `2*i + 2`, parent = `(i - 1) / 2`.
 
-## Read deeper
+**Pick one and stick to it.**
 
-- CLRS chapter 6 (Heapsort) and chapter 19 (Fibonacci heaps).
-- "A Practical Comparison of N-ary Heaps" — fanouts other than 2 sometimes win for cache.
-- For the curious: Lock-free priority queues — Hunt & Sundell, et al.
+### Bug 2: bounds check on children during sift-down
 
-Next → [Graphs](DSA-11-graphs.md).
+```c
+size_t l = 2*i + 1;
+if (a[l] < a[i])    // BUG: didn't check that l < size
+```
+
+If `l >= size`, you read past the end. Always: `if (l < size && a[l] < a[i])`.
+
+### Bug 3: assumption that heap is sorted
+
+A heap is **partially** ordered. You can't read off the array as "sorted." Only the **root** is the min. The 2nd smallest could be left or right of the root. To get sorted output, extract-min repeatedly (heap sort).
+
+### Bug 4: comparing in the wrong direction (min vs max)
+
+Min-heap: parent ≤ children (sift up if smaller, sift down to smaller child).
+Max-heap: parent ≥ children (sift up if larger, sift down to larger child).
+
+Mix them up → "heap" doesn't satisfy any property and operations don't restore it.
+
+## Recap
+
+1. A heap is a complete binary tree stored as an **array**. `arr[i]` parent at `(i-1)/2`; children at `2i+1`, `2i+2`.
+2. **Min-heap**: parent ≤ children. Min always at root.
+3. Insert and extract-min: **O(log n)**. Build a heap from n items: **O(n)**.
+4. Heap sort: **O(n log n)** in-place.
+5. The top-K problem: keep a min-heap of size K → O(N log K).
+6. Used in scheduling, Dijkstra, timers, merge-K, OS task selection.
+
+## Self-check (in your head)
+
+1. Given the array `[10, 4, 7, 2, 1, 8]`, is it a min-heap? Why or why not?
+
+2. Insert 0 into the min-heap `[1, 3, 6, 5, 9, 8, 7]`. Trace the sift-up. What's the final array?
+
+3. Extract-min from `[1, 3, 6, 5, 9, 8, 7]`. What value comes out, and what's the array after?
+
+4. In a min-heap of size 1023, what's the maximum number of swaps for one insert?
+
+5. To find the **5 smallest** out of 1 billion numbers, do you use a min-heap or a max-heap of size 5?
+
+---
+
+**Answers:**
+
+1. Check parent–child:
+   - index 0 (value 10) — left = index 1 (value 4). 10 ≤ 4? **No.** Already broken.
+   
+   **Not a min-heap.**
+
+2. Append 0 at index 7:
+   ```
+   [1, 3, 6, 5, 9, 8, 7, 0]
+   ```
+   Sift up from 7: parent (7-1)/2 = 3, value 5. 0 < 5 → swap.
+   ```
+   [1, 3, 6, 0, 9, 8, 7, 5]
+   ```
+   Now at index 3. Parent (3-1)/2 = 1, value 3. 0 < 3 → swap.
+   ```
+   [1, 0, 6, 3, 9, 8, 7, 5]
+   ```
+   Now at index 1. Parent 0, value 1. 0 < 1 → swap.
+   ```
+   [0, 1, 6, 3, 9, 8, 7, 5]
+   ```
+   Now at index 0 — root. Stop.
+   
+   **Final: `[0, 1, 6, 3, 9, 8, 7, 5]`.**
+
+3. Returns **1** (root). Move last (7) to root: `[7, 3, 6, 5, 9, 8]` (size 6 now). Sift down from 0: children 3, 6. Smaller is 3 (left). 7 > 3 → swap → `[3, 7, 6, 5, 9, 8]`. Now at 1. Children: 5, 9. Smaller is 5. 7 > 5 → swap → `[3, 5, 6, 7, 9, 8]`. Now at 3. Children: 8, 9 — but only 8 (index 7) exists. 7 < 8 → no swap.
+   
+   **Final: `[3, 5, 6, 7, 9, 8]`.**
+
+4. log₂(1023) ≈ **10 swaps.**
+
+5. **Max-heap of size 5.** You're tracking "the 5 smallest seen so far"; the **largest** of those is the candidate for eviction (when a smaller one arrives). Max-heap's root is that largest. Symmetric to top-K largest with min-heap.
+
+If 4/5 you understand heaps. 5/5, move on.
+
+Next → [DSA-14 — Sorting algorithms](DSA-14-sorting.md). (Skipping DSA-11/12/13 for the read-to-learn rewrite; originals still readable.)

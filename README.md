@@ -11,7 +11,11 @@ This book assumes **no prior programming knowledge at all**. We start from "what
 
 ---
 
-## ⚠️ NEW — Start here if you have never coded before
+## ⚠️ NEW — Read the LEARNING PATH first
+
+**Before anything else, read [LEARNING-PATH.md](LEARNING-PATH.md).** It tells you what order to read this book in (you do **not** read parts numerically the first time — there's a real path).
+
+The 14-stage path: computer literacy → programming basics → C → **DSA** → **userspace systems programming** → C++ → multithreading → **OS theory** → kernel → drivers → GPU → HW/SW → career → senior track.
 
 If reading "Chapter 1: What is a program, a compiler, an OS?" feels too advanced, **you are in the right place but on the wrong page**. Go to **[Part 0 — Absolute Zero](part0-zero/README.md)** first. It assumes you know nothing — not even how to use a terminal — and brings you up to the level where Part I makes sense.
 
@@ -57,6 +61,24 @@ You will build, in order:
 9. [From Python to C](part0-zero/09-from-python-to-c.md)
 10. [When things break — debugging mindset](part0-zero/10-when-things-break.md)
 11. [Bridge to Part I](part0-zero/11-bridge-to-part1.md)
+
+### Part DSA — Data Structures & Algorithms (in C) — *Stage 4 in the [LEARNING PATH](LEARNING-PATH.md)*
+
+> **READ AFTER PART I.** Required for interviews **and** kernel work. 28 chapters.
+
+See **[partDSA/README.md](partDSA/README.md)** for the full table of contents. Topics: complexity, arrays, strings, linked lists, stacks/queues, hash tables, BSTs, RB/AVL trees, B-trees, heaps, graphs, shortest paths, tries, all the sorts, all the searches, recursion, DP, greedy, divide & conquer, bit tricks, two pointers, backtracking, union-find, segment / Fenwick / interval trees, KMP / Rabin-Karp / suffix arrays, system-design DS (LRU, bloom filter, skip list, consistent hashing), concurrent DS (RCU, lock-free queues), and a guided tour of the kernel's data structures.
+
+### Part USP — Userspace Systems Programming — *Stage 5 in the [LEARNING PATH](LEARNING-PATH.md)*
+
+> **MASTER USERSPACE FIRST. THEN KERNEL.** 12 chapters.
+
+See **[partUSP/README.md](partUSP/README.md)** for the full table of contents. Topics: Unix philosophy & syscalls, processes (fork/exec/wait), signals, pipes/FIFOs, shared memory & mmap, message queues / semaphores / futex, sockets (TCP/UDP/Unix), epoll / io_uring, pthreads deep, file I/O deep (`O_DIRECT`, `sendfile`), `/proc` / `/sys` / `/dev`, perf tools (strace, perf, valgrind, gdb).
+
+### Part OST — Classic OS Theory — *Stage 8 in the [LEARNING PATH](LEARNING-PATH.md)*
+
+> Academic foundation that complements Part III (Linux-specific). 10 chapters.
+
+See **[partOST/README.md](partOST/README.md)** for the full table of contents. Topics: process model, scheduling theory (FCFS/SJF/RR/MLFQ/lottery/CFS/EDF), synchronization theory (Peterson/semaphores/monitors), classic problems (dining philosophers etc.), deadlock, memory theory (paging/segmentation/swap), page replacement, file system theory & journaling, crash consistency, distributed systems intro (consensus, RPC, time, CAP).
 
 ### Part I — C from Zero to Driver-Grade
 1. [What is a program, a compiler, an OS?](part1-c/01-what-is-a-program.md)

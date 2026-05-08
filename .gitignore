@@ -42,3 +42,7 @@ venv/
 *.tmp
 core
 core.*
+
+# PDF build intermediates (the final PDF *is* committed; intermediates are not)
+_combined.md
+_combined.html

@@ -11,6 +11,22 @@ This book assumes **no prior programming knowledge at all**. We start from "what
 
 ---
 
+## 📕 Read the entire book as one PDF
+
+The whole textbook (all 184 chapters across 17 parts) is also available as a single PDF for offline reading:
+
+**[from-zero-to-amd-gpu-engineer.pdf](from-zero-to-amd-gpu-engineer.pdf)** — 821 pages, ~3.8 MB.
+
+To rebuild the PDF after changes:
+
+```bash
+./build-pdf.sh
+```
+
+Requires `pandoc`, `python3`, and `weasyprint` (install via `pip3 install --user weasyprint`).
+
+---
+
 ## ⚠️ NEW — Read the LEARNING PATH first
 
 **Before anything else, read [LEARNING-PATH.md](LEARNING-PATH.md).** It tells you what order to read this book in (you do **not** read parts numerically the first time — there's a real path).

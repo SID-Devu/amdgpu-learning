@@ -139,6 +139,54 @@ You will build, in order:
 62. [Contributing to the upstream kernel and Mesa](part9-career/62-upstream-contribution.md)
 63. [The 12-month plan from contractor to FTE](part9-career/63-twelve-month-plan.md)
 
+### Part X — The Senior / Principal / PMTS Track (the 24-year-engineer's map)
+*See [`partX-principal/README.md`](partX-principal/README.md) for how to use this part. Reference material — not a tutorial.*
+
+**Hardware foundations**
+64. [GPU microarchitecture: RDNA](partX-principal/64-microarch-rdna.md)
+65. [GPU microarchitecture: CDNA & matrix engines](partX-principal/65-microarch-cdna.md)
+66. [Wavefronts, occupancy, VGPRs/SGPRs](partX-principal/66-waves-occupancy-gprs.md)
+67. [GPU memory subsystem: HBM, GDDR, controllers](partX-principal/67-memory-subsystem.md)
+68. [GPU cache hierarchy & coherence](partX-principal/68-gpu-cache-hierarchy.md)
+69. [PM4 packets, command processor, firmware engines](partX-principal/69-pm4-firmware.md)
+
+**The graphics pipeline, deeply**
+70. [Geometry pipeline: vertex → tess → geom → mesh shaders](partX-principal/70-geometry-pipeline.md)
+71. [Rasterization, hierarchical Z, primitive culling](partX-principal/71-rasterization.md)
+72. [Pixel pipeline: RBE, ROPs, blending, MSAA](partX-principal/72-pixel-rbe.md)
+73. [Ray tracing hardware](partX-principal/73-ray-tracing.md)
+
+**Compute, runtime, queues**
+74. [KFD, HSA, AQL packets, MES](partX-principal/74-kfd-hsa-aql.md)
+75. [CWSR, priorities, preemption](partX-principal/75-cwsr-preempt.md)
+76. [ROCm runtime deep](partX-principal/76-rocm-runtime.md)
+
+**Display, multimedia, power**
+77. [Display Core (DCN) deep dive](partX-principal/77-display-core-dcn.md)
+78. [Multimedia (VCN), codecs](partX-principal/78-multimedia-vcn.md)
+79. [SMU, DPM, voltage/frequency, telemetry](partX-principal/79-smu-power.md)
+
+**Userspace stack deep**
+80. [Mesa, radv, ACO, NIR](partX-principal/80-mesa-radv-aco.md)
+81. [LLVM AMDGPU backend](partX-principal/81-llvm-amdgpu-backend.md)
+82. [Vulkan & DX12 deep](partX-principal/82-vulkan-dx12.md)
+
+**Driver advanced topics**
+83. [SR-IOV and GPU virtualization](partX-principal/83-sriov-virt.md)
+84. [VM faults, page tables, recovery](partX-principal/84-vm-fault-recovery.md)
+85. [Security: PSP, FW signing, attestation, SEV](partX-principal/85-security-psp.md)
+
+**Performance & debug at scale**
+86. [SQTT, RGP, perf counters, RGD](partX-principal/86-sqtt-rgp.md)
+87. [Cross-stack debug & regression triage](partX-principal/87-cross-stack-debug.md)
+
+**Engineering at staff/principal level**
+88. [Customer / ISV / game studio interaction](partX-principal/88-customer-isv.md)
+89. [Maintainership and upstream leadership](partX-principal/89-maintainership.md)
+90. [Silicon bring-up, post-silicon validation](partX-principal/90-silicon-bringup.md)
+91. [Cross-vendor architecture: NVIDIA, Apple, ARM, Imagination](partX-principal/91-cross-vendor.md)
+92. [The PMTS career arc — the 24-year view](partX-principal/92-pmts-career.md)
+
 ### Labs
 See [`labs/README.md`](labs/README.md) — runnable C, C++, kernel, and DRM exercises:
 

@@ -43,6 +43,20 @@ About **2–3 weeks** at 1 hour a day. Less if you already know some of this; mo
 | 10 | [When things break](10-when-things-break.md) | The debugging mindset (the most important chapter) |
 | 11 | [Bridge to Part I](11-bridge-to-part1.md) | You are ready. Here's the map. |
 
+### Foundations side-track (read on demand)
+
+These are *remedial* topics. If you ever feel "everyone seems to assume I know this," read the relevant one and come back.
+
+| # | Chapter | Read when |
+|---|---|---|
+| A1 | [Numbers — binary, hex, decimal](foundations/A1-numbers.md) | You see `0xCAFE` or `1 << 12` and don't know what they mean |
+| A2 | [Bits, bytes, words](foundations/A2-bits-and-bytes.md) | You're unsure what a byte is, or KB vs KiB |
+| A3 | [Boolean logic — AND/OR/NOT/XOR](foundations/A3-boolean-logic.md) | Bit operations confuse you |
+| A4 | [Shell power tour](foundations/A4-shell-power-tour.md) | You want pipes, grep, scripts beyond chapter 2 |
+| A5 | [Character encoding — ASCII / UTF-8](foundations/A5-character-encoding.md) | Text shows up garbled or you hit a CRLF mystery |
+
+See [`foundations/README.md`](foundations/README.md) for the index.
+
 ## Why we use Python first
 
 You will end up writing **C** for your job (and that's what Part I onwards teaches). But C is unforgiving — small mistakes cause weird crashes that confuse beginners.
